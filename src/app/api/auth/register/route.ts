@@ -6,8 +6,15 @@ import { registerSchema } from '@/lib/validations'
 import { ZodError } from 'zod'
 export async function POST(request: NextRequest) {
   try {
+    console.log('📝 Iniciando registro de usuário...')
+    console.log('🔍 DATABASE_URL configurado?', !!process.env.DATABASE_URL)
+    console.log('🔍 SMTP configurado?', !!process.env.SMTP_HOST)
+    
     const body = await request.json()
+    console.log('📧 Email recebido:', body.email)
+    
     const validatedData = registerSchema.parse(body)
+    console.log('✅ Dados validados com sucesso')
     const existingUser = await prisma.user.findUnique({
       where: { email: validatedData.email },
     })
