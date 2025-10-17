@@ -1,34 +1,5 @@
 {
   "version": 2,
-  "functions": {
-    "api/security/monitor.ts": {
-      "maxDuration": 30
-    },
-    "api/security/cleanup.ts": {
-      "maxDuration": 30
-    },
-    "api/security/backup.ts": {
-      "maxDuration": 60
-    }
-  },
-  "crons": [
-    {
-      "path": "/api/security/monitor",
-      "schedule": "0 * * * *"
-    },
-    {
-      "path": "/api/security/cleanup",
-      "schedule": "0 3 * * 0"
-    },
-    {
-      "path": "/api/security/backup",
-      "schedule": "0 1 * * *"
-    },
-    {
-      "path": "/api/security/jwt-rotation",
-      "schedule": "0 2 * * *"
-    }
-  ],
   "env": {
     "NODE_ENV": "production"
   },
