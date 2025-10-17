@@ -1,0 +1,188 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+/playwright-report
+/test-results
+/testsprite_tests/tmp/
+
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.test.js
+**/*.test.jsx
+**/*.spec.ts
+**/*.spec.tsx
+**/*.spec.js
+**/*.spec.jsx
+**/__tests__/
+**/e2e/
+jest.config.js
+jest.setup.js
+playwright.config.ts
+playwright.config.js
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Documentation files (except README.md)
+*.md
+!README.md
+
+# Text files
+*.txt
+
+# Scripts temporários
+scripts/update-link-images.ts
+scripts/clean-test-users.sh
+configure-email.sh
+
+# Arquivos de configuração temporários
+email-preview.html
+
+# Logs e relatórios
+*.log
+/logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# TestSprite files and folder
+testsprite_tests/
+*.pyc
+__pycache__/
+
+# Playwright
+node_modules/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+
+# ------------------------------------------------------------
+# Adições seguras automaticamente inseridas (não removi nada existente)
+# - caches, temporários, chaves, credenciais, ferramentas locais
+# ------------------------------------------------------------
+
+# caches / builds / temporários
+/.cache/
+/.parcel-cache/
+.turbo/
+/tmp/
+/.tmp/
+/temp/
+/dist/
+/build/
+
+# pnpm / package managers
+pnpm-debug.log*
+
+# logs adicionais
+*.log
+/logs/
+
+# chaves / credenciais
+*.key
+*.jks
+*.p12
+*.pfx
+serviceAccount*.json
+credentials.json
+secrets.json
+*.secret
+google-credentials*.json
+.aws/credentials
+.gcloud/
+.firebase/
+
+# python artifacts
+*.pyc
+.pytest_cache/
+
+# editor / history
+.history/
+
+# prisma generated client
+node_modules/.prisma/
+
+# ------------------------------------------------------------
+# Entradas adicionais (adicionadas automaticamente):
+# Ignorar caches, artefatos, chaves e arquivos sensíveis comuns
+# ------------------------------------------------------------
+
+# caches e temporários
+/.cache/
+/.parcel-cache/
+.turbo/
+/tmp/
+/temp/
+/.tmp/
+/dist/
+
+# logs e debug
+pnpm-debug.log*
+*.log
+/logs/
+
+# chaves e credenciais
+*.key
+*.jks
+*.p12
+*.pfx
+serviceAccount*.json
+credentials.json
+secrets.json
+*.secret
+google-credentials*.json
+.aws/credentials
+.gcloud/
+.firebase/
+
+# python / bytecode
+*.pyc
+.pytest_cache/
+
+# editor / history
+.history/
+
+# generated Prisma client folders (if present locally)
+node_modules/.prisma/

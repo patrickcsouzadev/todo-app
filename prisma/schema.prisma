@@ -1,0 +1,185 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  password    String
+  isConfirmed Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  names       Name[]
+  todos       Todo[]
+  tokens      Token[]
+  
+  // MFA (Multi-Factor Authentication)
+  totpSecret  String?
+  mfaEnabled  Boolean  @default(false)
+  backupCodes String[]
+  
+  // Session Management
+  lastLoginAt DateTime?
+  lastLoginIp String?
+  sessionCount Int      @default(0)
+  
+  // Security Events
+  loginAttempts LoginAttempt[]
+  auditLogs     AuditLog[]
+  
+  // Rate Limiting
+  rateLimitEntries RateLimitEntry[]
+
+  @@index([email])
+  @@index([lastLoginAt])
+}
+
+model Name {
+  id        String   @id @default(uuid())
+  label     String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  todos     Todo[]
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+enum Priority {
+  RED // Urgente
+  YELLOW // Prioridade
+  BLUE // Pode esperar
+}
+
+model Todo {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  link        String?
+  linkImage   String?
+  priority    Priority
+  name        Name?    @relation(fields: [nameId], references: [id], onDelete: SetNull)
+  nameId      String?
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  completed   Boolean  @default(false)
+
+  @@index([userId, priority, createdAt])
+  @@index([userId, nameId])
+  @@index([userId, createdAt])
+  @@index([userId, completed])
+}
+
+model Token {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  type      String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  // JWT Key Rotation
+  keyVersion String?  // Version of JWT key used to create this token
+
+  @@index([token])
+  @@index([userId])
+  @@index([type])
+  @@index([expiresAt])
+}
+
+// Login Attempts Tracking
+model LoginAttempt {
+  id        String   @id @default(uuid())
+  email     String
+  success   Boolean
+  ip        String
+  userAgent String?
+  failureReason String?
+  createdAt DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
+
+  @@index([email])
+  @@index([ip])
+  @@index([createdAt])
+  @@index([success])
+}
+
+// Audit Log for Security Events
+model AuditLog {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action      String   // e.g., 'LOGIN', 'LOGOUT', 'TODO_CREATE', 'TODO_DELETE'
+  resourceType String? // e.g., 'TODO', 'USER', 'NAME'
+  resourceId  String?
+  ip          String
+  userAgent   String?
+  metadata    Json?    // Additional context data
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([action])
+  @@index([resourceType])
+  @@index([createdAt])
+}
+
+// Rate Limiting per User/IP
+model RateLimitEntry {
+  id        String   @id @default(uuid())
+  key       String   // IP or user ID
+  endpoint  String   // API endpoint
+  count     Int      @default(1)
+  windowStart DateTime @default(now())
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String?
+
+  @@unique([key, endpoint, windowStart])
+  @@index([key])
+  @@index([endpoint])
+  @@index([windowStart])
+}
+
+// JWT Key Rotation Management
+model JWTKey {
+  id          String   @id @default(uuid())
+  keyId       String   @unique
+  secret      String
+  algorithm   String   @default("HS256")
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+
+  @@index([keyId])
+  @@index([isActive])
+  @@index([expiresAt])
+}
+
+// Security Events for SIEM
+model SecurityEvent {
+  id          String   @id @default(uuid())
+  eventType   String   // e.g., 'SUSPICIOUS_LOGIN', 'RATE_LIMIT_EXCEEDED', 'MALICIOUS_REQUEST'
+  severity    String   // 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL'
+  description String
+  sourceIp    String
+  userAgent   String?
+  userId      String?
+  metadata    Json?
+  resolved    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([eventType])
+  @@index([severity])
+  @@index([sourceIp])
+  @@index([resolved])
+  @@index([createdAt])
+}
+
+

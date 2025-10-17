@@ -1,0 +1,57 @@
+.priority-red {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3) !important;
+}
+
+.priority-red:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4) !important;
+}
+
+.priority-yellow {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3) !important;
+}
+
+.priority-yellow:hover {
+  background: linear-gradient(135deg, #d97706, #b45309) !important;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4) !important;
+}
+
+.priority-blue {
+  background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+  color: white !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+}
+
+.priority-blue:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4) !important;
+}
+
+.priority-dot-red {
+  background-color: #ef4444 !important;
+}
+
+.priority-dot-yellow {
+  background-color: #f59e0b !important;
+}
+
+.priority-dot-blue {
+  background-color: #3b82f6 !important;
+}
+
+
+
+
+
+
+
+
+
+
