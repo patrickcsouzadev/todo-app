@@ -11,6 +11,7 @@ export type AuditAction =
   | 'USER_ENABLE_MFA'
   | 'USER_DISABLE_MFA'
   | 'USER_VERIFY_MFA'
+  | 'USER_SETUP_MFA'
   | 'TODO_CREATE'
   | 'TODO_UPDATE'
   | 'TODO_DELETE'
@@ -56,13 +57,13 @@ export interface SecurityEventEntry {
  */
 export function extractRequestInfo(request: NextRequest): {
   ip: string
-  userAgent: string | null
+  userAgent: string | undefined
 } {
   const forwarded = request.headers.get('x-forwarded-for')
   const realIp = request.headers.get('x-real-ip')
   const ip = forwarded?.split(',')[0] || realIp || 'unknown'
   
-  const userAgent = request.headers.get('user-agent')
+  const userAgent = request.headers.get('user-agent') || undefined
   
   return { ip, userAgent }
 }

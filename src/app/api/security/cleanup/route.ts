@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { cleanupOldLogs } from '@/lib/siem'
-import { logSecurityEvent } from '@/lib/audit'
+import { logSecurityEvent, cleanupOldLogs } from '@/lib/audit'
 
 export async function GET(request: NextRequest) {
   try {

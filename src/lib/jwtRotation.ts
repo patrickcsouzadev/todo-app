@@ -13,6 +13,7 @@ export interface JWTKeyInfo {
   secret: string
   algorithm: string
   isActive: boolean
+  createdAt?: Date
   expiresAt: Date
 }
 
