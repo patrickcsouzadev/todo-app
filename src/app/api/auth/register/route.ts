@@ -6,19 +6,12 @@ import { registerSchema } from '@/lib/validations'
 import { ZodError } from 'zod'
 export async function POST(request: NextRequest) {
   try {
-    console.log('📝 Iniciando registro de usuário...')
-    console.log('🔍 DATABASE_URL configurado?', !!process.env.DATABASE_URL)
-    console.log('🔍 SMTP configurado?', !!process.env.SMTP_HOST)
-    
     const body = await request.json()
-    console.log('📧 Email recebido:', body.email)
-    
     const validatedData = registerSchema.parse(body)
-    console.log('✅ Dados validados com sucesso')
+    
     const existingUser = await prisma.user.findUnique({
       where: { email: validatedData.email },
     })
-    console.log('🔍 Usuário existente?', !!existingUser)
     if (existingUser) {
       return NextResponse.json(
         { ok: false, error: 'Email já cadastrado' },
@@ -26,10 +19,7 @@ export async function POST(request: NextRequest) {
       )
     }
     const hashedPassword = await hashPassword(validatedData.password)
-    console.log('✅ Senha hasheada com sucesso')
-    
     const autoConfirm = process.env.TESTSPRITE_AUTO_CONFIRM === 'true'
-    console.log('🔍 Auto-confirmar?', autoConfirm)
     
     const user = await prisma.user.create({
       data: {
@@ -38,14 +28,12 @@ export async function POST(request: NextRequest) {
         isConfirmed: autoConfirm,
       },
     })
-    console.log('✅ Usuário criado com ID:', user.id)
     if (!autoConfirm) {
       const token = await createConfirmationToken(user.id)
       try {
         await sendConfirmationEmail(user.email, token, user.id)
-        console.log('✅ Confirmation email sent to:', user.email)
       } catch (emailError) {
-        console.error('❌ Failed to send confirmation email:', emailError)
+        console.error('Failed to send confirmation email:', emailError)
         await prisma.user.delete({ where: { id: user.id } })
         return NextResponse.json(
           { ok: false, error: 'Erro ao enviar email de confirmação. Tente novamente.' },
@@ -59,9 +47,10 @@ export async function POST(request: NextRequest) {
           data: { isConfirmed: true },
         })
       } catch (updateErr) {
-        console.warn('Não foi possível atualizar o sinalizador de confirmação do usuário no fluxo de teste', updateErr)
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('Could not update user confirmation flag in test flow', updateErr)
+        }
       }
-      console.log('✅ Modo de confirmação automática: usuário confirmado automaticamente:', user.email)
     }
     return NextResponse.json({
       ok: true,
