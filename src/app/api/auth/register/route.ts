@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
     const existingUser = await prisma.user.findUnique({
       where: { email: validatedData.email },
     })
+    console.log('🔍 Usuário existente?', !!existingUser)
     if (existingUser) {
       return NextResponse.json(
         { ok: false, error: 'Email já cadastrado' },
@@ -25,7 +26,11 @@ export async function POST(request: NextRequest) {
       )
     }
     const hashedPassword = await hashPassword(validatedData.password)
+    console.log('✅ Senha hasheada com sucesso')
+    
     const autoConfirm = process.env.TESTSPRITE_AUTO_CONFIRM === 'true'
+    console.log('🔍 Auto-confirmar?', autoConfirm)
+    
     const user = await prisma.user.create({
       data: {
         email: validatedData.email,
@@ -33,6 +38,7 @@ export async function POST(request: NextRequest) {
         isConfirmed: autoConfirm,
       },
     })
+    console.log('✅ Usuário criado com ID:', user.id)
     if (!autoConfirm) {
       const token = await createConfirmationToken(user.id)
       try {
